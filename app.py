@@ -93,7 +93,8 @@ def receipt_preview_page(output_doc, receipt_filename):
     收据预览页面
     """
     st.title('收据预览')
-    st.success(f"以下收据已成功创建：\n{receipt_filename}\n请在此处下载该收据")
+    st.success(f"收据创建成功！", icon="✅")
+    st.info('点击"下载收据"按钮即可下载Word收据')
 
     # 将文档保存到内存
     output_buffer = io.BytesIO()
