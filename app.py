@@ -112,7 +112,7 @@ def receipt_preview_page(output_doc, receipt_filename):
     )
 
     # 返回按钮
-    if st.button('返回', use_container_width=True):
+    if st.button('返回主页', use_container_width=True):
         st.session_state.page = 'main'
         st.rerun()
 
