@@ -33,8 +33,8 @@ AWA_SERVICES = [
 
 # 基础服务选项
 BASIC_SERVICES = [
-    "the clean of floor board",
-    "steam cleaning of carpet, clean of"
+    " the clean of floor board",
+    " steam cleaning of carpet, clean of"
 ]
 
 
@@ -178,7 +178,7 @@ def main_page():
     )
 
     # 处理AWA相关逻辑
-    awa = "as well as" if awa_services else ""
+    awa = " as well as" if awa_services else ""
 
     # 处理未选择的电器
     excluded_ele = ", ".join(
