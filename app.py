@@ -93,6 +93,7 @@ def receipt_preview_page(output_doc, receipt_filename):
     收据预览页面
     """
     st.title('收据预览')
+    st.success(f"收据{receipt_filename}已开具！")
 
     # 将文档保存到内存
     output_buffer = io.BytesIO()
