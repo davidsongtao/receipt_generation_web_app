@@ -150,31 +150,35 @@ def main_page():
         amount = st.number_input('订单金额', min_value=0.0, step=1.0, format='%f')
 
         # 基础服务选择
-        basic_service = st.selectbox('基础服务', BASIC_SERVICES)
+        basic_service = st.selectbox('基础服务', BASIC_SERVICES, placeholder="请选择基础服务...")
 
     with col2:
         # 电器多选
         electrical_appliances = st.multiselect(
             'Electrical Appliances',
-            ELECTRICAL_APPLIANCES
+            ELECTRICAL_APPLIANCES,
+            placeholder="请选择电器..."
         )
 
         # 房间多选
         rooms = st.multiselect(
             'Rooms',
-            ROOMS
+            ROOMS,
+            placeholder="请选择房间..."
         )
 
         # 其他服务多选
         other_services = st.multiselect(
             'Other Services',
-            OTHER_SERVICES
+            OTHER_SERVICES,
+            placeholder="请选择其他服务..."
         )
 
     # AWA服务多选
     awa_services = st.multiselect(
         'AWS Services',
-        AWA_SERVICES
+        AWA_SERVICES,
+        placeholder="请选择AWA服务..."
     )
 
     # 处理AWA相关逻辑
