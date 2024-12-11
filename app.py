@@ -239,11 +239,11 @@ def main():
     col1, col2, col3 = st.sidebar.columns(3)
 
     with col1:
-        receipt_button = st.button('收据生成', use_container_width=True)
+        receipt_button = st.button('开收据', use_container_width=True)
     with col2:
-        writing_button = st.button('文案撰写', use_container_width=True)
+        writing_button = st.button('写文案', use_container_width=True)
     with col3:
-        quotation_button = st.button('自动化报价', use_container_width=True)
+        quotation_button = st.button('出报价', use_container_width=True)
 
     # 使用按钮状态控制页面展示
     if 'current_page' not in st.session_state:
