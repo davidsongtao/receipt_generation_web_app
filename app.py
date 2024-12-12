@@ -261,11 +261,6 @@ def writing_page():
 
     # 生成文案
     if generate_button:
-        # 验证输入
-        if not user_requirement:
-            st.warning('请输入您对文案的要求:')
-            return
-
         # 显示加载中
         with st.spinner('正在生成文案...'):
             try:
