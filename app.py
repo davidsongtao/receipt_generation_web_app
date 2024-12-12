@@ -264,7 +264,7 @@ def writing_page():
         # 显示加载中
         with st.spinner('正在生成文案...'):
             try:
-                prompt = "请根据以下需求，帮我书写一段宣传文案，字数不少于85个中文字符:\n" + user_requirement + "\n生成的结果中不要包含用户输入的内容，也不要包含需要替换的内容。语言风格不要太机械生硬。"
+                prompt = "请根据以下需求，帮我书写一段宣传文案，字数不少于100个中文字符:\n" + user_requirement + "\n生成的结果中不要包含用户输入的内容，也不要包含需要替换的内容。语言风格不要太机械生硬。"
                 # 调用OpenAI/DeepSeek API生成文案
                 response = (client.chat.completions.create(
                     model="deepseek-chat",
