@@ -275,7 +275,7 @@ def writing_page():
         # 显示文案
         if st.session_state.generated_content:
             # 显示文案
-            generated_text = st.code(st.session_state.generated_content, height=300)
+            generated_text = st.code(st.session_state.generated_content)
 
 def quotation_page():
     """
