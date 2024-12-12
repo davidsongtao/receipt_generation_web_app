@@ -308,6 +308,7 @@ def main():
     # # 创建列以均匀分布按钮
     # col1, col2, col3 = st.sidebar.columns(3)
     st.sidebar.title("🏠ATM Cleaning Service")
+    st.sidebar.write("Hi~欢迎使用ATM智能助理~👋")
     st.sidebar.divider()
     #
     # with col1:
