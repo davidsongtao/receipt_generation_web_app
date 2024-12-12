@@ -299,9 +299,7 @@ def quotation_page():
 
 
 def main():
-    st.set_page_config(page_title='ATM Cleaning Service', menu_items={
-        'about':"this is about"
-    })
+    st.set_page_config(page_title='ATM Assistant', page_icon='🤖')
     # # 设置页面导航
     # st.sidebar.title('导航菜单')
 
