@@ -276,7 +276,7 @@ def writing_page():
         if st.session_state.generated_content:
             # 显示文案
             st.markdown(st.session_state.generated_content)
-            st_copy_to_clipboard(st.session_state.generated_content, before_copy_label="点击此处已复制文案", after_copy_label="文案已复制")
+            st_copy_to_clipboard(st.session_state.generated_content, before_copy_label="点击此处已复制文案", after_copy_label="文案已复制", show_text=True)
 
 
 def quotation_page():
