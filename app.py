@@ -249,7 +249,7 @@ def writing_page():
     if generate_button:
         # 验证输入
         if not user_requirement:
-            st.warning('请输入文案生成需求')
+            st.warning('请输入您对文案的要求:')
             return
 
         # 显示加载中
@@ -272,11 +272,8 @@ def writing_page():
 
     # 始终显示生成的文案（如果有）
     if st.session_state.generated_content:
-        # 显示文案
-        if st.session_state.generated_content:
-            # 显示文案
-                st.markdown(st.session_state.generated_content)
-                st_copy_to_clipboard(st.session_state.generated_content, before_copy_label="📋复制文案", after_copy_label="✅已复制到剪贴板")
+        st.markdown(st.session_state.generated_content)
+        st_copy_to_clipboard(st.session_state.generated_content, before_copy_label="📋复制文案", after_copy_label="✅已复制到剪贴板")
 
 
 def quotation_page():
