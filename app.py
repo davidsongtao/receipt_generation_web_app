@@ -4,6 +4,9 @@ import io
 import os
 from datetime import date
 from docx.shared import Pt
+from openai import OpenAI
+import clipboard
+
 
 # 常量定义（保持不变）
 TEMPLATE_DIR = 'templates'
@@ -223,11 +226,60 @@ def main_page():
 
 def writing_page():
     """
-    文案撰写页面
+    文案撰写页面，使用OpenAI API生成文案
     """
     st.title('文案撰写')
-    st.warning('页面正在开发中')
 
+    # 初始化session state中的生成文案
+    if 'generated_content' not in st.session_state:
+        st.session_state.generated_content = ''
+
+    client = OpenAI(api_key="sk-2f91e64612a141d9a88e6e6b995e5151", base_url="https://api.deepseek.com")
+
+    # 文案需求输入
+    user_requirement = st.text_input(
+        '请输入文案生成需求',
+        placeholder='例如：为一家清洁公司写一篇吸引客户的服务介绍'
+    )
+
+    # 生成文案按钮
+    generate_button = st.button('生成文案', use_container_width=True, type='primary')
+
+    # 生成文案
+    if generate_button:
+        # 验证输入
+        if not user_requirement:
+            st.warning('请输入文案生成需求')
+            return
+
+        # 显示加载中
+        with st.spinner('正在生成文案...'):
+            try:
+                prompt = "请根据以下需求，帮我书写一段宣传文案，字数不少于50个中文字符，不超过80个中文字符:\n" + user_requirement + "\n生成的结果中不要包含用户输入的内容，也不要包含需要替换的内容。"
+                # 调用OpenAI/DeepSeek API生成文案
+                response = (client.chat.completions.create(
+                    model="deepseek-chat",
+                    messages=[
+                        {"role": "system", "content": "你是一个清洁公司的广告宣传文案生成器。\n"},
+                        {"role": "user", "content": prompt}
+                    ]
+                ))
+
+                # 保存生成的文案到session state
+                st.session_state.generated_content = response.choices[0].message.content
+            except Exception as e:
+                st.error(f"发生未知错误！错误代码：{e}")
+
+    # 始终显示生成的文案（如果有）
+    if st.session_state.generated_content:
+        # 显示文案
+        if st.session_state.generated_content:
+            # 显示文案
+            generated_text = st.code(st.session_state.generated_content)
+
+        if st.button('复制文案', use_container_width=True, type='primary'):
+            clipboard.copy(st.session_state.generated_content)
+            st.success('文案已复制到剪贴板')
 
 def quotation_page():
     """
