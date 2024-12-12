@@ -248,7 +248,7 @@ def writing_page():
     client = OpenAI(api_key="sk-2f91e64612a141d9a88e6e6b995e5151", base_url="https://api.deepseek.com")
 
     welcome_message = st.chat_message("assistant")
-    welcome_message.write(stream_res("您好👋~我是您的文案助手，请告诉我您对文案的需求："))
+    welcome_message.write("您好👋~我是您的文案助手，请告诉我您对文案的需求：")
 
     # 文案需求输入
     user_requirement = st.text_input(
