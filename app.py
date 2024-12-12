@@ -5,7 +5,7 @@ import os
 from datetime import date
 from docx.shared import Pt
 from openai import OpenAI
-import clipboard
+from st_copy_to_clipboard import st_copy_to_clipboard
 
 
 # 常量定义（保持不变）
@@ -275,7 +275,9 @@ def writing_page():
         # 显示文案
         if st.session_state.generated_content:
             # 显示文案
-            generated_text = st.code(st.session_state.generated_content)
+            st.markdown(st.session_state.generated_content)
+            st_copy_to_clipboard(st.session_state.generated_content)
+
 
 def quotation_page():
     """
