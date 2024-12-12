@@ -310,9 +310,9 @@ def main():
     st.sidebar.divider()
     #
     # with col1:
-    receipt_button = st.sidebar.button('开收据', use_container_width=True, type='primary')
+    receipt_button = st.sidebar.button('🧾开收据', use_container_width=True, type='primary')
     # with col2:
-    writing_button = st.sidebar.button('写文案', use_container_width=True, type='primary')
+    writing_button = st.sidebar.button('🤖写文案', use_container_width=True, type='primary')
     # with col3:
     # quotation_button = st.button('出报价', use_container_width=True)
 
