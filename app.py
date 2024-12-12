@@ -271,12 +271,15 @@ def writing_page():
                 st.error(f"发生未知错误！错误代码：{e}")
 
     # 始终显示生成的文案（如果有）
+    col1, col2 = st.sidebar.columns(2)
     if st.session_state.generated_content:
         # 显示文案
         if st.session_state.generated_content:
             # 显示文案
-            st.markdown(st.session_state.generated_content)
-            st_copy_to_clipboard(st.session_state.generated_content, before_copy_label="点击此处已复制文案", after_copy_label="文案已复制", show_text=True)
+            with col1:
+                st.markdown(st.session_state.generated_content)
+            with col2:
+                st_copy_to_clipboard(st.session_state.generated_content, before_copy_label="📋复制文案", after_copy_label="✅已复制到剪贴板")
 
 
 def quotation_page():
