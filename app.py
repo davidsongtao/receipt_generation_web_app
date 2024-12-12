@@ -228,7 +228,7 @@ def writing_page():
     """
     文案撰写页面，使用OpenAI API生成文案
     """
-    st.title('文案撰写')
+    st.title('ATM Assistant')
 
     # 初始化session state中的生成文案
     if 'generated_content' not in st.session_state:
