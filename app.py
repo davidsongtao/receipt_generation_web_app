@@ -251,10 +251,11 @@ def writing_page():
     welcome_message.write("您好👋~我是您的文案助手，请告诉我您对文案的需求：")
 
     # 文案需求输入
-    user_requirement = st.text_input(
-        '',
-        placeholder='例如：今天保洁工作已完成。'
-    )
+    # user_requirement = st.text_input(
+    #     '',
+    #     placeholder='例如：今天保洁工作已完成。'
+    # )
+    user_requirement = st.chat_input("请输入文案需求")
 
     # 生成文案按钮
     generate_button = st.button('生成文案', use_container_width=True, type='primary')
