@@ -277,10 +277,6 @@ def writing_page():
             # 显示文案
             generated_text = st.code(st.session_state.generated_content)
 
-        if st.button('复制文案', use_container_width=True, type='primary'):
-            clipboard.copy(st.session_state.generated_content)
-            st.success('文案已复制到剪贴板')
-
 def quotation_page():
     """
     自动化报价页面
