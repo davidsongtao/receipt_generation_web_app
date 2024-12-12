@@ -1,3 +1,5 @@
+import time
+
 import streamlit as st
 from docx import Document
 import io
@@ -6,7 +8,6 @@ from datetime import date
 from docx.shared import Pt
 from openai import OpenAI
 from st_copy_to_clipboard import st_copy_to_clipboard
-
 
 # 常量定义（保持不变）
 TEMPLATE_DIR = 'templates'
@@ -91,11 +92,17 @@ def replace_placeholders(doc, data_dict):
     return doc
 
 
+def stream_res(res):
+    for char in res:
+        yield char
+        time.sleep(0.05)
+
+
 def receipt_preview_page(output_doc, receipt_filename):
     """
     收据预览页面
     """
-    st.title('ATM Receipt')
+    st.title('💻ATM Receipt')
     st.success(f"收据创建成功！", icon="✅")
     st.info('点击"下载收据"按钮即可下载Word收据')
 
@@ -124,7 +131,9 @@ def main_page():
     """
     主页面
     """
-    st.title('ATM Receipt')
+    st.title('💻ATM Receipt')
+
+    st.divider()
 
     # 模板选择
     templates = [f for f in os.listdir(TEMPLATE_DIR) if f.endswith('.docx')]
@@ -228,7 +237,9 @@ def writing_page():
     """
     文案撰写页面，使用OpenAI API生成文案
     """
-    st.title('ATM Assistant')
+    st.title('🤖ATM Assistant')
+
+    st.divider()
 
     # 初始化session state中的生成文案
     if 'generated_content' not in st.session_state:
@@ -238,8 +249,8 @@ def writing_page():
 
     # 文案需求输入
     user_requirement = st.text_input(
-        '请输入文案生成需求',
-        placeholder='例如：为一家清洁公司写一篇吸引客户的服务介绍'
+        '请告诉我您的要求：',
+        placeholder='例如：今天保洁工作已完成。'
     )
 
     # 生成文案按钮
@@ -270,10 +281,13 @@ def writing_page():
             except Exception as e:
                 st.error(f"发生未知错误！错误代码：{e}")
 
-    # 始终显示生成的文案（如果有）
-    if st.session_state.generated_content:
-        st.markdown(st.session_state.generated_content)
-        st_copy_to_clipboard(st.session_state.generated_content, before_copy_label="📋复制文案", after_copy_label="✅已复制到剪贴板")
+        # 始终显示生成的文案（如果有）
+        if st.session_state.generated_content:
+            st.divider()
+            show_message = st.chat_message("assistant")
+            show_message.write(stream_res(st.session_state.generated_content))
+            st_copy_to_clipboard(st.session_state.generated_content, before_copy_label="📋复制文案", after_copy_label="✅已复制到剪贴板")
+            st.info("再次点击“生成文案”可以重新生成哦~", icon="ℹ️")
 
 
 def quotation_page():
@@ -285,18 +299,25 @@ def quotation_page():
 
 
 def main():
-    # 设置页面导航
-    st.sidebar.title('导航菜单')
+    # # 设置页面导航
+    # st.sidebar.title('导航菜单')
 
-    # 创建列以均匀分布按钮
-    col1, col2, col3 = st.sidebar.columns(3)
 
-    with col1:
-        receipt_button = st.button('开收据', use_container_width=True)
-    with col2:
-        writing_button = st.button('写文案', use_container_width=True)
-    with col3:
-        quotation_button = st.button('出报价', use_container_width=True)
+    #
+    # # 创建列以均匀分布按钮
+    # col1, col2, col3 = st.sidebar.columns(3)
+    st.sidebar.title("🏠ATM Cleaning Service")
+    st.sidebar.divider()
+    #
+    # with col1:
+    receipt_button = st.sidebar.button('开收据', use_container_width=True, type='primary')
+    # with col2:
+    writing_button = st.sidebar.button('写文案', use_container_width=True, type='primary')
+    # with col3:
+    # quotation_button = st.button('出报价', use_container_width=True)
+
+    st.sidebar.divider()
+    st.sidebar.write("版本：V 0.1.0", )
 
     # 使用按钮状态控制页面展示
     if 'current_page' not in st.session_state:
@@ -307,8 +328,8 @@ def main():
         st.session_state.current_page = '收据生成'
     elif writing_button:
         st.session_state.current_page = '文案撰写'
-    elif quotation_button:
-        st.session_state.current_page = '自动化报价'
+    # elif quotation_button:
+    #     st.session_state.current_page = '自动化报价'
 
     # 根据导航选择页面
     if st.session_state.current_page == '收据生成':
@@ -331,8 +352,8 @@ def main():
     elif st.session_state.current_page == '文案撰写':
         writing_page()
 
-    elif st.session_state.current_page == '自动化报价':
-        quotation_page()
+    # elif st.session_state.current_page == '自动化报价':
+    #     quotation_page()
 
 
 if __name__ == "__main__":
