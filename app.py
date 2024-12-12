@@ -252,6 +252,7 @@ def writing_page():
 
     # 文案需求输入
     user_requirement = st.text_input(
+        '',
         placeholder='例如：今天保洁工作已完成。'
     )
 
