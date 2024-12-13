@@ -327,7 +327,8 @@ def quotation_page():
     """
     st.title('💰Money Maker')
     st.divider()
-    st.warning('页面正在开发中')
+    st.info("请将通义听悟中的章节概览粘贴到下面的输入框中。", icon="ℹ️")
+    section_review = st.text_area("")
 
 
 def main():
