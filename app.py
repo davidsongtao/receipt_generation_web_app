@@ -105,7 +105,7 @@ def receipt_preview_page(output_doc, receipt_filename):
     safe_filename = receipt_filename.replace('/', '.')
     st.title('🧾ATM Receipt')
     st.success(f"收据 >>>{safe_filename}<<< 创建成功！", icon="✅")
-    st.info('点击"下载收据"按钮即可下载Word收据')
+    st.info('点击"下载收据"按钮，即可下载Word收据。', icon="ℹ️")
 
     # 将文档保存到内存
     output_buffer = io.BytesIO()
