@@ -327,6 +327,7 @@ def quotation_page():
     """
     st.title('💰Money Maker')
     st.divider()
+    st.info("请输入课程相关信息。", icon="ℹ️")
     class_date = st.date_input("授课日期：")
     class_name = st.text_input("课程名称：")
     st.info("请将通义听悟中的章节概览粘贴到下面的输入框中。", icon="ℹ️")
@@ -344,7 +345,6 @@ def quotation_page():
         prompt = system_prompt + class_date_label + class_name_label + content + end
         st.markdown(prompt)
         st_copy_to_clipboard(prompt, before_copy_label="📋复制文案", after_copy_label="✅已复制到剪贴板")
-        st.divider()
         st.info("请将以上提示词粘贴到ChatGPT中生成课程总结。", icon="ℹ️")
         st.link_button("👉前往ChatGPT.com生成课程总结", "https://chatgpt.com/?model=auto", use_container_width=True, type='primary')
 def main():
