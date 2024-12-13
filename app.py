@@ -141,7 +141,8 @@ def validate_address(address):
         return False
 
     if not re.match(pattern, address):
-        st.warning("地址只能包含英文字符、数字和符号(.,- #/)")
+        st.warning("地址只能包含英文字符、数字和符号(.,- #/)", icon="⚠️")
+        st.info("通常该错误是因为地址中包含中文输入法下的逗号，请检查。", icon="ℹ️")
         return False
 
     return True
