@@ -360,8 +360,8 @@ def main():
         st.session_state.current_page = '收据生成'
     elif writing_button:
         st.session_state.current_page = '文案撰写'
-    # elif quotation_button:
-    #     st.session_state.current_page = '自动化报价'
+    elif quotation_button:
+        st.session_state.current_page = '课程总结'
 
     # 根据导航选择页面
     if st.session_state.current_page == '收据生成':
