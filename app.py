@@ -333,7 +333,7 @@ def quotation_page():
     st.info("请将通义听悟中的章节概览粘贴到下面的输入框中。", icon="ℹ️")
     section_review = st.text_area("章节概览：")
 
-    if st.button('生成课程总结', use_container_width=True, type='primary'):
+    if st.button('👉生成课程总结', use_container_width=True, type='primary'):
 
         system_prompt = "你现在是一个拥有三十年教学经验的初中英语老师，你刚刚完成一节英语课的授课，以下是记录的课堂授课内容章节速览：\n\n"
         class_date_label = f"授课日期：{class_date}\n"
