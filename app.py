@@ -270,7 +270,7 @@ def writing_page():
     """
     文案撰写页面，使用OpenAI API生成文案
     """
-    st.title('🤖JF Personal Assistant')
+    st.title('🤖ATM Assistant')
 
     st.divider()
 
