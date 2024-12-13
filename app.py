@@ -96,7 +96,7 @@ def replace_placeholders(doc, data_dict):
 def stream_res(res):
     for char in res:
         yield char
-        time.sleep(0.05)
+        time.sleep(0.02)
 
 
 def receipt_preview_page(output_doc, receipt_filename):
