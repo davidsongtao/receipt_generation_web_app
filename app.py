@@ -344,6 +344,8 @@ def quotation_page():
         prompt = system_prompt + class_date_label + class_name_label + content + end
         st.markdown(prompt)
         st_copy_to_clipboard(prompt, before_copy_label="📋复制文案", after_copy_label="✅已复制到剪贴板")
+        st.divider()
+        st.info("请将以上提示词粘贴到ChatGPT中生成课程总结。", icon="ℹ️")
         st.link_button("👉前往ChatGPT.com生成课程总结", "https://chatgpt.com/?model=auto", use_container_width=True, type='primary')
 def main():
     st.set_page_config(page_title='ATM Assistant', page_icon='🤖')
