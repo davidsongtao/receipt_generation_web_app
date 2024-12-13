@@ -142,7 +142,7 @@ def main_page():
         st.error('未找到模板文件，请在templates文件夹中添加.docx文件')
         return None
 
-    selected_template = st.selectbox('收据模板', templates, index=1)
+    selected_template = st.selectbox('收据模板', templates)
     template_path = os.path.join(TEMPLATE_DIR, selected_template)
 
     # 读取模板
