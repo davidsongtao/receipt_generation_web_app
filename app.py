@@ -4,6 +4,7 @@ import streamlit as st
 from docx import Document
 import io
 import os
+import re
 from datetime import date
 from docx.shared import Pt
 from openai import OpenAI
@@ -128,6 +129,24 @@ def receipt_preview_page(output_doc, receipt_filename):
         st.rerun()
 
 
+def validate_address(address):
+    """
+    验证地址是否只包含英文字符、数字和常见标点符号
+    """
+    # 使用正则表达式检查是否只包含英文、数字、空格和常见标点符号
+    pattern = r'^[a-zA-Z0-9\s\.\,\-\#]+$'
+
+    if not address:
+        st.warning("地址不能为空")
+        return False
+
+    if not re.match(pattern, address):
+        st.warning("地址只能包含英文字符、数字和符号(.,- #)")
+        return False
+
+    return True
+
+
 def main_page():
     """
     主页面
@@ -205,8 +224,7 @@ def main_page():
     # 生成收据按钮 - 宽度与输入框一致
     if st.button('生成收据', use_container_width=True, type="primary"):
         # 输入验证
-        if not address:
-            st.warning("请填写地址")
+        if not validate_address(address):
             return None
 
         # 准备替换字典
@@ -301,7 +319,6 @@ def main():
     st.set_page_config(page_title='ATM Assistant', page_icon='🤖')
     # # 设置页面导航
     # st.sidebar.title('导航菜单')
-
 
     #
     # # 创建列以均匀分布按钮
