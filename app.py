@@ -340,6 +340,7 @@ def quotation_page():
         end = "请帮我进行润色，丰富内容，形成一篇专业且内容丰富的课堂总结。总结包括两部分主要内容：课程概述/总结与建议。请按照1234等要点对课堂概述进行提炼。主要总结课堂上讲授了什么知识，其他无关紧要的不要总结。总结不要分太多级。"
         prompt = system_prompt + class_date_label + class_name_label + content + end
         st.markdown(prompt)
+        st_copy_to_clipboard(st.session_state.generated_content, before_copy_label="📋复制文案", after_copy_label="✅已复制到剪贴板")
 def main():
     st.set_page_config(page_title='ATM Assistant', page_icon='🤖')
     # # 设置页面导航
