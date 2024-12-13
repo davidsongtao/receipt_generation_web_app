@@ -323,7 +323,7 @@ def writing_page():
 
 def quotation_page():
     """
-    自动化报价页面
+    课程总结页面
     """
     st.title('自动化报价')
     st.warning('页面正在开发中')
