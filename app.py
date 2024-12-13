@@ -133,19 +133,16 @@ def validate_address(address):
     """
     验证地址是否只包含英文字符、数字和常见标点符号
     """
-    # 使用正则表达式检查是否只包含英文、数字、空格和常见标点符号
+    # 增加 / 到允许的字符中
     pattern = r'^[a-zA-Z0-9\s\.\,\-\#\/]+$'
 
     if not address:
-        st.warning("地址不能为空")
-        return False
+        return False, "地址不能为空"
 
     if not re.match(pattern, address):
-        st.warning("地址只能包含英文字符、数字和符号(.,- #/)", icon="⚠️")
-        st.info("通常该错误是因为地址中包含中文输入法下的逗号，请检查。", icon="ℹ️")
-        return False
+        return False, "地址只能包含英文字符、数字和符号(.,- #/)"
 
-    return True
+    return True, ""
 
 
 def main_page():
@@ -178,6 +175,12 @@ def main_page():
 
         # 地址输入
         address = st.text_input('客户地址')
+
+        # 实时验证地址
+        if address:
+            is_valid, error_message = validate_address(address)
+            if not is_valid:
+                st.error(error_message)
 
         # 金额输入 - 修改为每次加减1
         amount = st.number_input('订单金额', min_value=0.0, step=1.0, format='%f')
