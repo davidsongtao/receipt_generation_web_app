@@ -370,6 +370,11 @@ def quotation_page():
                 st.error(f"发生未知错误！错误代码：{e}")
 
 
+def window_paper_page():
+    st.title('🪟Window Order')
+    st.divider()
+    st.warning("该功能正在开发中，敬请期待...", icon="⚠️")
+
 
 def main():
     st.set_page_config(page_title='ATM Assistant', page_icon='🤖')
@@ -379,7 +384,7 @@ def main():
     #
     # # 创建列以均匀分布按钮
     # col1, col2, col3 = st.sidebar.columns(3)
-    st.sidebar.title("🏠ATM Cleaning Service")
+    st.sidebar.title("🏠JF Personal Assistant")
     st.sidebar.divider()
     #
     # with col1:
@@ -389,6 +394,8 @@ def main():
     # with col3:
     # quotation_button = st.button('出报价', use_container_width=True)
     quotation_button = st.sidebar.button('🚀课程总结', use_container_width=True, type='primary')
+
+    window_paper_button = st.sidebar.button('📄窗户委托', use_container_width=True, type='primary')
 
     st.sidebar.divider()
     st.sidebar.write("版本：V 0.2.1", )
@@ -404,6 +411,8 @@ def main():
         st.session_state.current_page = '文案撰写'
     elif quotation_button:
         st.session_state.current_page = '课程总结'
+    elif window_paper_button:
+        st.session_state.current_page = '窗户委托'
 
     # 根据导航选择页面
     if st.session_state.current_page == '收据生成':
@@ -428,6 +437,8 @@ def main():
 
     elif st.session_state.current_page == '课程总结':
         quotation_page()
+    elif st.session_state.current_page == '窗户委托':
+        window_paper_page()
 
 
 if __name__ == "__main__":
