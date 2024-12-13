@@ -103,7 +103,7 @@ def receipt_preview_page(output_doc, receipt_filename):
     收据预览页面
     """
     st.title('🧾ATM Receipt')
-    st.success(f"收据 \"{receipt_filename}\" 创建成功！", icon="✅")
+    st.success(f"收据 >>>{receipt_filename}<<< 创建成功！", icon="✅")
     st.info('点击"下载收据"按钮即可下载Word收据')
 
     # 将文档保存到内存
