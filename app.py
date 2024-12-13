@@ -353,9 +353,6 @@ def quotation_page():
 
         client = OpenAI(api_key="sk-2f91e64612a141d9a88e6e6b995e5151", base_url="https://api.deepseek.com")
 
-        welcome_message = st.chat_message("ai")
-        welcome_message.write("您好👋我是您的智能小助手，我将为您生成课程总结!")
-
         # 显示加载中
         with st.spinner('正在生成文案...'):
             try:
@@ -367,6 +364,8 @@ def quotation_page():
                 ))
                 response_message = st.chat_message("ai")
                 response_message.write(stream_res(response.choices[0].message.content))
+                st_copy_to_clipboard(response.choices[0].message.content, before_copy_label="📋复制课程总结", after_copy_label="✅已复制到剪贴板")
+
             except Exception as e:
                 st.error(f"发生未知错误！错误代码：{e}")
 
