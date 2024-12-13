@@ -134,7 +134,7 @@ def validate_address(address):
     验证地址是否只包含英文字符、数字和常见标点符号
     """
     # 使用正则表达式检查是否只包含英文、数字、空格和常见标点符号
-    pattern = r'^[a-zA-Z0-9\s\.\,\-\#]+$'
+    pattern = r'^[a-zA-Z0-9\s\.\,\-\#\/]+$'
 
     if not address:
         st.warning("地址不能为空")
