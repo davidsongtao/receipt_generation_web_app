@@ -176,11 +176,17 @@ def main_page():
         # 地址输入
         address = st.text_input('客户地址')
 
+        # 地址验证标志
+        address_valid = True
+
         # 实时验证地址
         if address:
             is_valid, error_message = validate_address(address)
             if not is_valid:
                 st.error(error_message)
+                address_valid = False
+            else:
+                address_valid = True
 
         # 金额输入 - 修改为每次加减1
         amount = st.number_input('订单金额', min_value=0.0, step=1.0, format='%f')
@@ -225,10 +231,14 @@ def main_page():
         [ele for ele in ELECTRICAL_APPLIANCES if ele not in electrical_appliances]
     )
 
+    generate_receipt_disabled = not (address and address_valid)
+
     # 生成收据按钮 - 宽度与输入框一致
-    if st.button('生成收据', use_container_width=True, type="primary"):
+    if st.button('生成收据', use_container_width=True, type="primary", disabled=generate_receipt_disabled):
+        is_valid, error_message = validate_address(address)
         # 输入验证
-        if not validate_address(address):
+        if not is_valid:
+            st.error(error_message, icon="⚠️")
             return None
 
         # 准备替换字典
