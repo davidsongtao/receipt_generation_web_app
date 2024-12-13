@@ -346,10 +346,10 @@ def main():
     writing_button = st.sidebar.button('🤖撰写文案', use_container_width=True, type='primary')
     # with col3:
     # quotation_button = st.button('出报价', use_container_width=True)
-    quotation_button = st.sidebar.button('🧑‍🏫课程总结', use_container_width=True, type='primary')
+    quotation_button = st.sidebar.button('🚀课程总结', use_container_width=True, type='primary')
 
     st.sidebar.divider()
-    st.sidebar.write("版本：V 0.1.0", )
+    st.sidebar.write("版本：V 0.2.1", )
 
     # 使用按钮状态控制页面展示
     if 'current_page' not in st.session_state:
