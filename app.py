@@ -334,8 +334,8 @@ def quotation_page():
 
     if st.button('生成ChatGPT提示词', use_container_width=True, type='primary'):
         system_prompt = "你现在是一个拥有三十年教学经验的初中英语老师，你刚刚完成一节英语课的授课，以下是记录的课堂授课内容章节速览：\n\n"
-        class_date_label = f"授课日期：{class_date}\n"
-        class_name_label = f"课程：{class_name}\n"
+        class_date_label = f"\n授课日期：{class_date}\n"
+        class_name_label = f"\n课程：{class_name}\n"
         content = f"{section_review}\n\n"
         end = "请帮我进行润色，丰富内容，形成一篇专业且内容丰富的课堂总结。总结包括两部分主要内容：课程概述/总结与建议。请按照1234等要点对课堂概述进行提炼。主要总结课堂上讲授了什么知识，其他无关紧要的不要总结。总结不要分太多级。"
         prompt = system_prompt + class_date_label + class_name_label + content + end
