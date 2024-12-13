@@ -325,7 +325,8 @@ def quotation_page():
     """
     课程总结页面
     """
-    st.title('自动化报价')
+    st.title('💰Money Maker')
+    st.divider()
     st.warning('页面正在开发中')
 
 
