@@ -354,7 +354,7 @@ def quotation_page():
         client = OpenAI(api_key="sk-2f91e64612a141d9a88e6e6b995e5151", base_url="https://api.deepseek.com")
 
         # 显示加载中
-        with st.spinner('正在生成文案...'):
+        with st.spinner('正在努力生成课程总结...请稍后...'):
             try:
                 response = (client.chat.completions.create(
                     model="deepseek-chat",
