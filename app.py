@@ -102,8 +102,9 @@ def receipt_preview_page(output_doc, receipt_filename):
     """
     收据预览页面
     """
+    safe_filename = receipt_filename.replace('/', '.')
     st.title('🧾ATM Receipt')
-    st.success(f"收据 >>>{receipt_filename}<<< 创建成功！", icon="✅")
+    st.success(f"收据 >>>{safe_filename}<<< 创建成功！", icon="✅")
     st.info('点击"下载收据"按钮即可下载Word收据')
 
     # 将文档保存到内存
@@ -115,7 +116,7 @@ def receipt_preview_page(output_doc, receipt_filename):
     st.download_button(
         label="下载收据",
         data=output_buffer,
-        file_name=receipt_filename,
+        file_name=safe_filename,
         mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document",
         use_container_width=True,
         type="primary"  # 添加主要按钮样式
