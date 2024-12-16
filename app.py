@@ -421,12 +421,6 @@ def quotation_page():
                 st.error(f"发生未知错误！错误代码：{e}")
 
 
-def window_paper_page():
-    st.title('🪟Window Order')
-    st.divider()
-    st.warning("该功能正在开发中，敬请期待...", icon="⚠️")
-
-
 def main():
     st.set_page_config(page_title='ATM Assistant', page_icon='🤖')
     # # 设置页面导航
@@ -460,8 +454,6 @@ def main():
         st.session_state.current_page = '文案撰写'
     elif quotation_button:
         st.session_state.current_page = '课程总结'
-    elif window_paper_button:
-        st.session_state.current_page = '窗户委托'
 
     # 根据导航选择页面
     if st.session_state.current_page == '收据生成':
@@ -486,8 +478,6 @@ def main():
 
     elif st.session_state.current_page == '课程总结':
         quotation_page()
-    elif st.session_state.current_page == '窗户委托':
-        window_paper_page()
 
 
 if __name__ == "__main__":
