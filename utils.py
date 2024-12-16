@@ -8,13 +8,15 @@ Description:
 @Contact  ：king.songtao@gmail.com
 """
 import traceback
-from datetime import date, time
+from datetime import date
 from docx.shared import Pt
 import re
 import streamlit as st
 import sqlite3
 import pandas as pd
 from streamlit_gsheets import GSheetsConnection
+import time
+
 
 
 def format_date(input_date):
