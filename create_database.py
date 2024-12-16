@@ -8,11 +8,12 @@ Description:
 @Contact  ：king.songtao@gmail.com
 """
 import sqlite3
+from utils import connect_db
 
 
 def create_database():
     # 连接 SQLite 数据库（如果没有数据库文件，会自动创建）
-    conn = sqlite3.connect('work_orders.db')
+    conn = connect_db()
     cursor = conn.cursor()
 
     # 创建工单表格
@@ -34,6 +35,7 @@ def create_database():
 
     conn.commit()
     conn.close()
+
 
 if __name__ == '__main__':
     create_database()

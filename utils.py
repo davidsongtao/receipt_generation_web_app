@@ -14,6 +14,7 @@ import re
 import streamlit as st
 import sqlite3
 import pandas as pd
+from st_files_connection import FilesConnection
 
 
 def format_date(input_date):
@@ -104,7 +105,11 @@ def validate_address(address):
 
 
 def connect_db():
-    return sqlite3.connect(r"./work_orders.db")
+    conn = st.connection('gcs', type='sql')
+    df = conn.read("atmcleaning/work_orders.db", ttl=600)
+    db_connection = sqlite3.connect(df)
+
+    return db_connection
 
 
 def insert_data_to_db(register_time, notes, work_time, address, project, dispatcher, confirmed, registered, dispatched, dispatch_price, final_price, receipt_or_invoice, sent_or_not):
@@ -190,7 +195,7 @@ def get_all_addresses():
     # 从数据库获取所有工单地址
     # 示例：查询数据库返回所有地址
 
-    conn = sqlite3.connect(r'./work_orders.db')  # 请替换成你的数据库文件路径
+    conn = connect_db()  # 请替换成你的数据库文件路径
     cursor = conn.cursor()
     cursor.execute("SELECT DISTINCT address FROM work_orders")
     addresses = cursor.fetchall()
@@ -200,7 +205,7 @@ def get_all_addresses():
 
 
 def get_order_by_address(address):
-    conn = sqlite3.connect(r'./work_orders.db')  # 请替换成你的数据库文件路径
+    conn = connect_db()  # 请替换成你的数据库文件路径
     cursor = conn.cursor()
     cursor.execute("SELECT * FROM work_orders WHERE address = ?", (address,))
     orders = cursor.fetchall()
