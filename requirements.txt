@@ -12,3 +12,4 @@ pandas==2.2.3
 gcsfs
 st-files-connection
 sqlalchemy==2.0.36
+st-gsheets-connection

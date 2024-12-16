@@ -14,7 +14,7 @@ import re
 import streamlit as st
 import sqlite3
 import pandas as pd
-from st_files_connection import FilesConnection
+from streamlit_gsheets import GSheetsConnection
 
 
 def format_date(input_date):
@@ -104,12 +104,14 @@ def validate_address(address):
     return True, ""
 
 
-def connect_db():
-    conn = st.connection('gcs', type='sql')
-    df = conn.read("atmcleaning/work_orders.db", ttl=600)
-    db_connection = sqlite3.connect(df)
+# def connect_db():
+#     conn = st.connection('gsheets', type=GSheetsConnection)
+#     df = conn.read(spreadsheet='work_orders', worksheet="Sheet1", usecols=[0, 1], nrows=3,)
+#     return df
 
-    return db_connection
+def connect_db():
+    conn = sqlite3.connect(r"./work_orders.db")
+    return conn
 
 
 def insert_data_to_db(register_time, notes, work_time, address, project, dispatcher, confirmed, registered, dispatched, dispatch_price, final_price, receipt_or_invoice, sent_or_not):

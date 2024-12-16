@@ -8,6 +8,7 @@ Description:
 @Contact  ：king.songtao@gmail.com
 """
 from utils import *
+from openai import OpenAI
 
 
 def quotation_page():
@@ -53,6 +54,7 @@ def quotation_page():
                 ))
                 response_message = st.chat_message("ai")
                 response_message.write(stream_res(response.choices[0].message.content))
+                import st_copy_to_clipboard
                 st_copy_to_clipboard(response.choices[0].message.content, before_copy_label="📋复制课程总结", after_copy_label="✅已复制到剪贴板")
 
             except Exception as e:
