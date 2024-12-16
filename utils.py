@@ -7,6 +7,7 @@ Description:
 @Time     ：2024/12/16 下午3:59
 @Contact  ：king.songtao@gmail.com
 """
+import traceback
 from datetime import date, time
 from docx.shared import Pt
 import re
@@ -100,3 +101,57 @@ def validate_address(address):
         return False, "地址只能包含英文字符、数字和符号(.,- #/)。请检查是否含有中文逗号！"
 
     return True, ""
+
+
+def connect_db():
+    return sqlite3.connect(r"./work_orders.db")
+
+
+def insert_data_to_db(register_time, notes, work_time, address, project, dispatcher, confirmed, registered, dispatched, dispatch_price, final_price, receipt_or_invoice, sent_or_not):
+    conn = connect_db()
+    if not conn:
+        st.error("数据库连接失败！")
+        return
+
+    cursor = conn.cursor()
+    try:
+        # 打印所有参数，检查是否有异常值
+        print("参数列表：",
+            register_time, notes, work_time, address, project,
+            dispatcher, confirmed, registered, dispatched,
+            dispatch_price, final_price, receipt_or_invoice, sent_or_not
+        )
+
+        cursor.execute(
+            """
+            INSERT INTO work_orders (
+                register_time, notes, work_time, address, project, 
+                dispatcher, confirmed, registered, dispatched, 
+                dispatch_price, final_price, receipt_or_invoice, sent_or_not
+            )
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            """,
+            (
+                register_time, notes, work_time, address, project,
+                dispatcher, confirmed, registered, dispatched,
+                dispatch_price, final_price, receipt_or_invoice, sent_or_not
+            )
+        )
+        conn.commit()
+        st.success("工单创建成功！", icon="✅")
+    except Exception as e:
+        conn.rollback()
+        st.error(f"添加失败，错误原因：{e}")
+        print(f"详细错误信息：{traceback.format_exc()}")
+    finally:
+        cursor.close()
+        conn.close()
+
+
+# 显示工单数据
+def display_all_orders():
+    conn = connect_db()
+    df = pd.read_sql("SELECT * FROM work_orders", conn)
+    conn.close()
+
+    st.dataframe(df, hide_index=True)
