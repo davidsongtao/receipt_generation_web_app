@@ -111,17 +111,46 @@ def receipt_preview_page(output_doc, receipt_filename):
 
     st.divider()
 
-    # 将 Word 文档转换为 HTML
+    # 发票预览模块
+    # 自定义 CSS，设置字体为 Arial
+    custom_css = """
+        <style>
+        body {
+            font-family: Arial, sans-serif; /* 全局设置字体为 Arial */
+        }
+        .date-right {
+            text-align: right;
+            margin-bottom: 10px;
+            font-family: Arial, sans-serif; /* 确保日期部分也使用 Arial */
+        }
+        .other-content {
+            text-align: left;
+            font-family: Arial, sans-serif; /* Word 内容字体设置为 Arial */
+        }
+        </style>
+        """
+
+    # 渲染日期到页面右侧
+    date_html = '<div class="date-right">16th Dec. 2024</div>'
+
+    # 使用 mammoth 转换 Word 文档内容为 HTML
     with io.BytesIO() as buffer:
         output_doc.save(buffer)
         buffer.seek(0)
-
-        # 使用 mammoth 转换
         result = mammoth.convert_to_html(buffer)
         html_content = result.value
 
-    # 在 Streamlit 中渲染 HTML
-    st.markdown(html_content, unsafe_allow_html=True)
+    # 删除 HTML 中可能包含的日期内容（如果有的话）
+    # 假设日期是一个特定的HTML标签或内容，可以在这里过滤
+    html_content = html_content.replace("16th Dec. 2024", "")  # 这里替换文档中的日期
+
+    # 将 mammoth 转换的 HTML 包裹在 "other-content" 样式中
+    html_content_wrapped = f'<div class="other-content">{html_content}</div>'
+
+    # 渲染自定义 CSS、日期和 Word 文档内容
+    st.markdown(custom_css, unsafe_allow_html=True)
+    st.markdown(date_html, unsafe_allow_html=True)  # 日期单独渲染，右对齐
+    st.markdown(html_content_wrapped, unsafe_allow_html=True)  # 其他内容左对齐
 
     # 将文档保存到内存
     output_buffer = io.BytesIO()
@@ -129,6 +158,11 @@ def receipt_preview_page(output_doc, receipt_filename):
     output_buffer.seek(0)
 
     st.divider()
+
+    # 将文档保存到内存
+    output_buffer = io.BytesIO()
+    output_doc.save(output_buffer)
+    output_buffer.seek(0)
 
     # 下载Word收据
     st.download_button(
