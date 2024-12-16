@@ -109,6 +109,8 @@ def receipt_preview_page(output_doc, receipt_filename):
     st.success(f"收据 >>>{safe_filename}<<< 创建成功！", icon="✅")
     st.info('点击"下载收据"按钮，即可下载Word收据。', icon="ℹ️")
 
+    st.divider()
+
     # 将 Word 文档转换为 HTML
     with io.BytesIO() as buffer:
         output_doc.save(buffer)
