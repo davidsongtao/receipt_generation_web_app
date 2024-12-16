@@ -40,16 +40,16 @@ def work_tracking_page():
             with col1:
                 register_time = st.date_input('登记时间')
                 work_time = st.date_input('工作时间')
-                receipt_or_invoice = st.selectbox('票据种类', options=['收据（R）- 已发', '收据（R）- 未发', '发票（I）'])
+                receipt_or_invoice = st.selectbox('票据种类', options=['收据（R）- 已发', '收据（R）- 未发', '发票（I）'], placeholder="Choose an option...")
 
             with col2:
-                dispatcher = st.selectbox('派单阿姨', options=['小鱼', 'Kitty', '李姨', '海叔', '娟姐'])
+                dispatcher = st.selectbox('派单阿姨', options=['小鱼', 'Kitty', '李姨', '海叔', '娟姐'], placeholder="Choose an option...")
                 final_price = st.number_input('成交价格', min_value=0, value=0)
                 dispatch_price = st.number_input('派单价格', min_value=0, value=0)
             with col3:
-                confirmed = st.selectbox('已确认', options=['✅', '❌'])
-                registered = st.selectbox('已登记表格', options=['✅', '❌'])
-                dispatched = st.selectbox('已派单', options=['✅', '❌'])
+                confirmed = st.selectbox('已确认', options=['✅', '❌'], placeholder="Choose an option...")
+                registered = st.selectbox('已登记表格', options=['✅', '❌'], placeholder="Choose an option...")
+                dispatched = st.selectbox('已派单', options=['✅', '❌'], placeholder="Choose an option...")
                 sent_or_not = "✅" if receipt_or_invoice == '收据（R）- 已发' else "❌"
 
             submitted = st.form_submit_button('提交工单信息', disabled=False, type='primary', use_container_width=True)
