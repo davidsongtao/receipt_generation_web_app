@@ -124,7 +124,6 @@ def receipt_preview_page(output_doc, receipt_filename):
     st.info('点击"下载收据"按钮，即可下载Word收据。', icon="ℹ️")
 
     st.divider()
-
     # 发票预览模块
     # 自定义 CSS，设置字体为 Arial
     custom_css = """
@@ -205,7 +204,7 @@ def validate_address(address):
         return False, "地址不能为空"
 
     if not re.match(pattern, address):
-        return False, "地址只能包含英文字符、数字和符号(.,- #/)"
+        return False, "地址只能包含英文字符、数字和符号(.,- #/)。请检查是否含有中文逗号！"
 
     return True, ""
 
@@ -435,23 +434,136 @@ def quotation_page():
                 st.error(f"发生未知错误！错误代码：{e}")
 
 
+def price_page():
+    st.title('⌨️Auto Quotation')
+    st.divider()
+    pricing_address = st.text_input("期望服务地址：")
+    wanted_date = format_date(st.date_input("期望服务日期：", min_value="today"))
+    generate_button_disabled = True
+    # 实时验证地址
+    if pricing_address:
+        is_valid, error_message = validate_address(pricing_address)
+        if not is_valid:
+            st.error(error_message)
+            generate_button_disabled = True
+        else:
+            generate_button_disabled = False
+    st.info("请选择您要报价的基础套餐并确认最终报价", icon="ℹ️")
+
+    # 1. 定义套餐和默认价格
+    basic_plans = {
+        "1b1b(洗地毯)": 275,
+        "1b1b(不蒸汽洗地毯)": 220,
+        "2b1b(蒸汽洗地毯)": 320,
+        "2b1b(不蒸汽洗地毯)": 280,
+        "2b2b(蒸汽洗地毯)": 350,
+        "2b2b(不蒸汽洗地毯)": 300,
+        "3b1b(蒸汽洗地毯)": 405,
+        "3b1b(不蒸汽洗地毯)": 350,
+        "3b2b(蒸汽洗地毯)": 445,
+        "3b2b(不蒸汽洗地毯)": 400
+    }
+
+    add_ons = {
+        "冰箱": 50,
+        "微波炉": 20,
+        "烤箱": 50,
+        "洗碗机": 25,
+        "洗衣机": 25,
+        "干衣机": 25,
+        "单独洗衣房（三室以上）": 30,
+        "单列玻璃": 8,
+        "空调（外表加滤网）": 25,
+        "洗床垫": 80,
+        "蒸汽洗沙发": 40,
+        "擦家具": 50,
+        "擦墙(现场估价)": 10,
+        "阳台+三面推拉门玻璃": 80,
+        "地毯吸尘(单独房间)": 20,
+        "地板吸尘拖地(单独房间)": 20,
+        "除宠物毛发(每个房间)": 40,
+        "整理物品+扔垃圾": 0,
+        "额外卫生间": 70,
+        "额外厨房": 130,
+        "油烟机": 50,
+    }
+
+    # 3. 让用户选择套餐
+    basic_plan_selected = st.selectbox("基础套餐：", options=list(basic_plans.keys()))
+
+    # 4. 获取用户选择的套餐对应的默认价格
+    default_price = basic_plans[basic_plan_selected]
+
+    # 5. 显示并允许用户修改价格
+    basic_plan_price = st.number_input(f"基础套餐 -> {basic_plan_selected} 的最终价格：", min_value=0, value=default_price)
+
+    st.info("请选择您要报价的基础套餐并确认最终报价", icon="ℹ️")
+
+    selected_add_ons = st.multiselect("请选择附加服务（可选择多个或不选择）", options=list(add_ons.keys()))
+    add_ons_price = 0
+    modified_add_ons = {}
+
+    for add_on in selected_add_ons:
+        # 允许用户修改附加服务的价格
+        modified_price = st.number_input(f"{add_on} 的最终报价", min_value=0, value=add_ons[add_on])
+        modified_add_ons[add_on] = modified_price
+        add_ons_price += modified_price
+
+    # 8. 计算总价格
+    total_price = basic_plan_price + add_ons_price
+
+    st.warning("请认真核对您所选择的所有服务内容及对应报价，如有错误请及时修改", icon="⚠️")
+
+    if selected_add_ons:
+        st.write(f"您选择的附加服务是: {', '.join(selected_add_ons)}")
+        for add_on, price in modified_add_ons.items():
+            st.write(f"{add_on}的修改后的价格: $ {price}")
+    else:
+        st.write("您没有选择任何附加服务")
+
+    # 10. 显示最终的总价格
+    st.write(f"最终总价格为: $ {total_price}")
+
+    # pricing_button = st.button('生成最终报价邮件', use_container_width=True, type='primary')
+    #
+    # if pricing_button:
+    #     st.session_state.current_page = '报价邮件'
+
+    if st.button('生成最终报价邮件', use_container_width=True, type='primary', disabled=generate_button_disabled):
+        email_subject = pricing_address
+        email_body = f"""尊敬的客户，\n\n感谢您选择我们的服务！根据您的选择，以下是您的定制报价单：\n\n服务地址：{pricing_address}\n期望服务日期：{wanted_date}\n\n基础套餐: {basic_plan_selected}\n基础套餐价格: $ {basic_plan_price}\n选择的附加服务: {', '.join(selected_add_ons) if selected_add_ons else '无附加服务'}\n附加服务价格明细:\n"""
+        for add_on, price in modified_add_ons.items():
+            email_body += f"{add_on}: $ {price}\n"
+
+        email_body += f"\n总价格: $ {total_price}\n\n如有任何问题，请随时联系我们。\n\n此致，\n\nATM Cleaning Service"
+
+        st.success(f"报价单 >>>{pricing_address}<<< 创建成功！", icon="✅")
+        st.divider()
+        st.write("Email Subject:")
+        st.code(email_subject)
+        st.write("Email Body:")
+        st.code(email_body)
+
+        # col1, col2 = st.columns(2)
+        # with col1:
+        #     st_copy_to_clipboard(email_subject, before_copy_label="复制邮件主题", after_copy_label="✅主题已复制")
+        # with col2:
+        #     st_copy_to_clipboard(email_body, before_copy_label="复制邮件内容", after_copy_label="✅内容已复制")
+        if st.button('重新修改报价内容', use_container_width=True):
+            st.session_state.page = 'main'
+            st.rerun()
+
+
 def main():
     st.set_page_config(page_title='ATM Assistant', page_icon='🤖')
-    # # 设置页面导航
-    # st.sidebar.title('导航菜单')
-
-    #
-    # # 创建列以均匀分布按钮
-    # col1, col2, col3 = st.sidebar.columns(3)
     st.sidebar.title("🏠JF Personal Assistant")
     st.sidebar.divider()
-    #
-    # with col1:
+
     receipt_button = st.sidebar.button('🧾创建收据', use_container_width=True, type='primary')
-    # with col2:
+
     writing_button = st.sidebar.button('🤖撰写文案', use_container_width=True, type='primary')
-    # with col3:
-    # quotation_button = st.button('出报价', use_container_width=True)
+
+    price_button = st.sidebar.button('💰自动报价', use_container_width=True, type='primary')
     quotation_button = st.sidebar.button('🚀课程总结', use_container_width=True, type='primary')
 
     st.sidebar.divider()
@@ -468,6 +580,8 @@ def main():
         st.session_state.current_page = '文案撰写'
     elif quotation_button:
         st.session_state.current_page = '课程总结'
+    elif price_button:
+        st.session_state.current_page = '报价生成'
 
     # 根据导航选择页面
     if st.session_state.current_page == '收据生成':
@@ -492,6 +606,8 @@ def main():
 
     elif st.session_state.current_page == '课程总结':
         quotation_page()
+    elif st.session_state.current_page == '报价生成':
+        price_page()
 
 
 if __name__ == "__main__":
