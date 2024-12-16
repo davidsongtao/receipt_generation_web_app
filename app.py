@@ -100,6 +100,20 @@ def stream_res(res):
         time.sleep(0.02)
 
 
+def extract_date_from_html(html_content):
+    """
+    提取 HTML 内容中的日期
+    假设日期格式为 "16th Dec. 2024"（可以根据需要调整正则表达式）
+    """
+    # 用正则表达式匹配日期
+    date_pattern = r"\d{1,2}[a-zA-Z]{2}\s[A-Za-z]+\.\s\d{4}"
+    match = re.search(date_pattern, html_content)
+
+    if match:
+        return match.group(0)  # 返回匹配到的日期
+    return None
+
+
 def receipt_preview_page(output_doc, receipt_filename):
     """
     收据预览页面
@@ -130,9 +144,6 @@ def receipt_preview_page(output_doc, receipt_filename):
         </style>
         """
 
-    # 渲染日期到页面右侧
-    date_html = '<div class="date-right">16th Dec. 2024</div>'
-
     # 使用 mammoth 转换 Word 文档内容为 HTML
     with io.BytesIO() as buffer:
         output_doc.save(buffer)
@@ -140,9 +151,17 @@ def receipt_preview_page(output_doc, receipt_filename):
         result = mammoth.convert_to_html(buffer)
         html_content = result.value
 
-    # 删除 HTML 中可能包含的日期内容（如果有的话）
-    # 假设日期是一个特定的HTML标签或内容，可以在这里过滤
-    html_content = html_content.replace("16th Dec. 2024", "")  # 这里替换文档中的日期
+    # 提取文档中的日期
+    extracted_date = extract_date_from_html(html_content)
+
+    # 如果找到了日期，渲染右对齐的日期
+    if extracted_date:
+        date_html = f'<div class="date-right">{extracted_date}</div>'
+    else:
+        date_html = ""  # 如果没有日期则不显示
+
+    # 删除 HTML 中的日期内容（如果有的话）
+    html_content = html_content.replace(extracted_date, "") if extracted_date else html_content
 
     # 将 mammoth 转换的 HTML 包裹在 "other-content" 样式中
     html_content_wrapped = f'<div class="other-content">{html_content}</div>'
@@ -151,11 +170,6 @@ def receipt_preview_page(output_doc, receipt_filename):
     st.markdown(custom_css, unsafe_allow_html=True)
     st.markdown(date_html, unsafe_allow_html=True)  # 日期单独渲染，右对齐
     st.markdown(html_content_wrapped, unsafe_allow_html=True)  # 其他内容左对齐
-
-    # 将文档保存到内存
-    output_buffer = io.BytesIO()
-    output_doc.save(output_buffer)
-    output_buffer.seek(0)
 
     st.divider()
 
