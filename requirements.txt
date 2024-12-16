@@ -8,3 +8,4 @@ PyQt5_sip==12.16.1
 st-copy-to-clipboard==0.1.6
 cobble==0.1.4
 mammoth==1.8.0
+pandas==2.2.3

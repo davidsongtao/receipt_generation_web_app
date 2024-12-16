@@ -5,6 +5,7 @@ from receipt_preview_page import *
 from writing_page import *
 from quotation_page import *
 import streamlit as st
+from work_order_page import *
 
 
 def main_page():
@@ -246,11 +247,6 @@ def price_page():
         if st.button('重新修改报价内容', use_container_width=True):
             st.session_state.page = 'main'
             st.rerun()
-
-
-def work_tracking_page():
-    st.title("✅Work Tracking")
-    st.divider()
 
 
 def main():
