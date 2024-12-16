@@ -39,7 +39,7 @@ AWA_SERVICES = [
 
 # 基础服务选项
 BASIC_SERVICES = [
-    " the clean of floor board",
+    " the clean of floor board,",
     " steam cleaning of carpet, the clean of"
 ]
 
