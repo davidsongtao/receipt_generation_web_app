@@ -31,3 +31,19 @@ BASIC_SERVICES = [
     " the clean of floor board,",
     " steam cleaning of carpet, the clean of"
 ]
+
+
+CUSTOM_HEADER = {
+    'notes': '备注',
+    'work_time': '工作时间',
+    'address': '工作地址',
+    'project': '项目',
+    'dispatcher': '派单阿姨',
+    'confirmed': '已确认',
+    'registered': '登记',
+    'dispatched': '派单',
+    'dispatch_price': '派遣价格',
+    'final_price': '成交价',
+    'receipt_or_invoice': '收据/发票',
+    'sent_or_not': '已发送'
+}

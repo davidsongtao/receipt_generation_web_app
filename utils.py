@@ -108,6 +108,8 @@ def connect_db():
 
 
 def insert_data_to_db(register_time, notes, work_time, address, project, dispatcher, confirmed, registered, dispatched, dispatch_price, final_price, receipt_or_invoice, sent_or_not):
+    print("正在插入数据...")
+
     conn = connect_db()
     if not conn:
         st.error("数据库连接失败！")
@@ -117,10 +119,10 @@ def insert_data_to_db(register_time, notes, work_time, address, project, dispatc
     try:
         # 打印所有参数，检查是否有异常值
         print("参数列表：",
-            register_time, notes, work_time, address, project,
-            dispatcher, confirmed, registered, dispatched,
-            dispatch_price, final_price, receipt_or_invoice, sent_or_not
-        )
+              register_time, notes, work_time, address, project,
+              dispatcher, confirmed, registered, dispatched,
+              dispatch_price, final_price, receipt_or_invoice, sent_or_not
+              )
 
         cursor.execute(
             """
@@ -155,3 +157,90 @@ def display_all_orders():
     conn.close()
 
     st.dataframe(df, hide_index=True)
+
+
+def display_preview_data():
+    conn = connect_db()
+    df = pd.read_sql("SELECT * FROM work_orders", conn)
+    df = df[['address', 'work_time', 'dispatcher', 'notes', 'final_price', 'dispatched', 'registered']]
+    from config import CUSTOM_HEADER
+    df = df.rename(columns=CUSTOM_HEADER)
+    st.dataframe(df, hide_index=True)
+    conn.close()
+
+
+def edit_work_order_page(register_time, notes, work_time, address, project, dispatcher, confirmed, registered, dispatched, dispatch_price, final_price, receipt_or_invoice, sent_or_not):
+    conn = connect_db()
+    try:
+        update_query = """
+            UPDATE work_orders
+            SET register_time = ?, notes = ?, work_time = ?, address = ?, project = ?, dispatcher = ?, confirmed = ?, registered = ?, dispatched = ?, dispatch_price = ?, final_price = ?, receipt_or_invoice = ?, sent_or_not = ?
+            WHERE address = ?
+        """
+        conn.execute(update_query, (register_time, notes, work_time, address, project, dispatcher, confirmed, registered, dispatched, dispatch_price, final_price, receipt_or_invoice, sent_or_not, address))
+        conn.commit()
+        conn.close()
+        st.rerun()
+        st.success("工单更新成功！", icon="✅")
+    except Exception as e:
+        st.error(f"更新失败，错误原因：{e}")
+
+
+def get_all_addresses():
+    # 从数据库获取所有工单地址
+    # 示例：查询数据库返回所有地址
+
+    conn = sqlite3.connect(r'./work_orders.db')  # 请替换成你的数据库文件路径
+    cursor = conn.cursor()
+    cursor.execute("SELECT DISTINCT address FROM work_orders")
+    addresses = cursor.fetchall()
+    conn.close()
+
+    return [address[0] for address in addresses]
+
+
+def get_order_by_address(address):
+    conn = sqlite3.connect(r'./work_orders.db')  # 请替换成你的数据库文件路径
+    cursor = conn.cursor()
+    cursor.execute("SELECT * FROM work_orders WHERE address = ?", (address,))
+    orders = cursor.fetchall()
+    conn.close()
+
+    return orders
+
+
+def delete_work_order(address):
+    conn = connect_db()
+    try:
+        delete_query = """
+        DELETE FROM work_orders WHERE address = ?
+        """
+        cursor = conn.cursor()
+        cursor.execute(delete_query, (address,))
+        conn.commit()
+
+        conn.close()
+        st.success("工单删除成功！", icon="✅")
+    except Exception as e:
+        st.warning("失败")
+
+
+def get_total_sale():
+    conn = connect_db()
+    try:
+        query_query = """
+        SELECT SUM(final_price) AS total_final_price FROM work_orders 
+        """
+        cursor = conn.cursor()
+        cursor.execute(query_query)
+
+        result = cursor.fetchone()
+
+        total_final_price = result[0] if result[0] is not None else 0
+
+        return total_final_price
+    except Exception as e:
+        st.error(f"查询失败，错误原因：{e}")
+        return None
+    finally:
+        conn.close()
