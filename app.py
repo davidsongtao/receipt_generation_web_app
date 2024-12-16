@@ -9,6 +9,7 @@ from datetime import date
 from docx.shared import Pt
 from openai import OpenAI
 from st_copy_to_clipboard import st_copy_to_clipboard
+import mammoth
 
 # 常量定义（保持不变）
 TEMPLATE_DIR = 'templates'
@@ -108,9 +109,17 @@ def receipt_preview_page(output_doc, receipt_filename):
     st.success(f"收据 >>>{safe_filename}<<< 创建成功！", icon="✅")
     st.info('点击"下载收据"按钮，即可下载Word收据。', icon="ℹ️")
 
-    # 文本预览
-    preview_text = "\n".join([para.text for para in output_doc.paragraphs if para.text.strip()])
-    st.text_area("文档预览", preview_text, height=300)
+    # 将 Word 文档转换为 HTML
+    with io.BytesIO() as buffer:
+        output_doc.save(buffer)
+        buffer.seek(0)
+
+        # 使用 mammoth 转换
+        result = mammoth.convert_to_html(buffer)
+        html_content = result.value
+
+    # 在 Streamlit 中渲染 HTML
+    st.markdown(html_content, unsafe_allow_html=True)
 
     # 将文档保存到内存
     output_buffer = io.BytesIO()
