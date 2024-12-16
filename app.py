@@ -446,8 +446,6 @@ def main():
     # quotation_button = st.button('出报价', use_container_width=True)
     quotation_button = st.sidebar.button('🚀课程总结', use_container_width=True, type='primary')
 
-    window_paper_button = st.sidebar.button('📄窗户委托', use_container_width=True, type='primary')
-
     st.sidebar.divider()
     st.sidebar.write("版本：V 0.2.1", )
 
