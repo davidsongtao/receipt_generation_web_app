@@ -117,7 +117,7 @@ def receipt_preview_page(output_doc, receipt_filename):
         buffer.seek(0)
 
         # 使用 mammoth 转换
-        result = mammoth.convert_to_html(buffer, style_map="p[style-name='Right Aligned'] => div.text-right")
+        result = mammoth.convert_to_html(buffer, style_map="p[style-name='Right'] => div.text-right")
         html_content = result.value
 
     # 在 Streamlit 中渲染 HTML
