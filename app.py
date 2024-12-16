@@ -554,17 +554,30 @@ def price_page():
             st.rerun()
 
 
+def work_tracking_page():
+    st.title("➡️Work Tracking")
+    st.divider()
+
+
 def main():
     st.set_page_config(page_title='ATM Assistant', page_icon='🤖')
-    st.sidebar.title("🏠JF Personal Assistant")
+    st.sidebar.title("🏠ATM Cleaning Assistant")
     st.sidebar.divider()
+
+    work_tracking = st.sidebar.button('📊工单追踪', use_container_width=True, type='primary')
 
     receipt_button = st.sidebar.button('🧾创建收据', use_container_width=True, type='primary')
 
     writing_button = st.sidebar.button('🤖撰写文案', use_container_width=True, type='primary')
 
     price_button = st.sidebar.button('💰自动报价', use_container_width=True, type='primary')
+
+
+
+    st.sidebar.divider()
+    st.sidebar.title("👤Personal Assistant")
     quotation_button = st.sidebar.button('🚀课程总结', use_container_width=True, type='primary')
+
 
     st.sidebar.divider()
     st.sidebar.write("版本：V 0.2.1", )
@@ -582,6 +595,8 @@ def main():
         st.session_state.current_page = '课程总结'
     elif price_button:
         st.session_state.current_page = '报价生成'
+    elif work_tracking:
+        st.session_state.current_page = '工单追踪'
 
     # 根据导航选择页面
     if st.session_state.current_page == '收据生成':
@@ -608,6 +623,8 @@ def main():
         quotation_page()
     elif st.session_state.current_page == '报价生成':
         price_page()
+    elif st.session_state.current_page == '工单追踪':
+        work_tracking_page()
 
 
 if __name__ == "__main__":
