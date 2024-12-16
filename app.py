@@ -6,6 +6,7 @@ from writing_page import *
 from quotation_page import *
 import streamlit as st
 
+
 def main_page():
     """
     主页面
@@ -248,7 +249,7 @@ def price_page():
 
 
 def work_tracking_page():
-    st.title("➡️Work Tracking")
+    st.title("✅Work Tracking")
     st.divider()
 
 
