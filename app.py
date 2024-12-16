@@ -111,17 +111,51 @@ def receipt_preview_page(output_doc, receipt_filename):
 
     st.divider()
 
+    # 发票预览
+    # 自定义 CSS 来模拟 Word 文档的对齐方式
+    st.markdown("""
+        <style>
+        .receipt-preview {
+            font-family: Arial, sans-serif;
+            font-size: 10pt;
+            max-width: 800px;
+            margin: auto;
+        }
+        .receipt-preview .date {
+            text-align: right;
+        }
+        .receipt-preview table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .receipt-preview td {
+            padding: 5px;
+            border: 1px solid #ddd;
+        }
+        </style>
+        """, unsafe_allow_html=True)
+
     # 将 Word 文档转换为 HTML
     with io.BytesIO() as buffer:
         output_doc.save(buffer)
         buffer.seek(0)
 
-        # 使用 mammoth 转换
-        result = mammoth.convert_to_html(buffer)
-        html_content = result.value
+        # 使用 python-docx 提供的 XML 转换
+        html = output_doc._body._body.xml
 
-    # 在 Streamlit 中渲染 HTML
-    st.markdown(html_content, unsafe_allow_html=True)
+        # 使用正则表达式处理 XML，提取文本和结构
+        html = re.sub(r'<w:', '<', html)  # 去除命名空间前缀
+        html = re.sub(r' xmlns="[^"]+"', '', html)  # 去除命名空间声明
+
+        # 简单的 XML 到 HTML 转换
+        html = re.sub(r'<p>', '<p class="receipt-preview">', html)
+        html = re.sub(r'<t>', '<span>', html)
+        html = re.sub(r'</t>', '</span>', html)
+
+        # 如果日期在第一个段落，添加日期对齐类
+        html = html.replace('<p class="receipt-preview">', '<p class="receipt-preview date">', 1)
+
+        st.markdown(f'<div class="receipt-preview">{html}</div>', unsafe_allow_html=True)
 
     # 将文档保存到内存
     output_buffer = io.BytesIO()
