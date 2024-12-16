@@ -32,7 +32,7 @@ def work_tracking_page():
     # if st.button('➕新建工单', type='primary'):
     # print("点击了新建工单按钮")
     with st.expander("➕创建新工单", expanded=False):
-        with st.form("my_form"):
+        with st.form("my_form", clear_on_submit=True):
             address = st.text_input('地址')
             notes = st.text_input('备注')
             project = st.text_input('工作项目')
@@ -52,7 +52,7 @@ def work_tracking_page():
                 dispatched = st.selectbox('已派单', options=['✅', '❌'])
                 sent_or_not = "✅" if receipt_or_invoice == '收据（R）- 已发' else "❌"
 
-            submitted = st.form_submit_button('提交工单信息', disabled=False, type='primary', use_container_width=True, clear_on_submit=True)
+            submitted = st.form_submit_button('提交工单信息', disabled=False, type='primary', use_container_width=True)
             if submitted:
                 from utils import insert_data_to_db
                 insert_data_to_db(register_time, notes, work_time, address, project, dispatcher, confirmed, registered, dispatched, dispatch_price, final_price, receipt_or_invoice, sent_or_not)
