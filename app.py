@@ -117,7 +117,7 @@ def receipt_preview_page(output_doc, receipt_filename):
         buffer.seek(0)
 
         # 使用 mammoth 转换
-        result = mammoth.convert_to_html(buffer, style_map="p[style-name='Right'] => div.text-right")
+        result = mammoth.convert_to_html(buffer)
         html_content = result.value
 
     # 在 Streamlit 中渲染 HTML
@@ -132,7 +132,7 @@ def receipt_preview_page(output_doc, receipt_filename):
 
     # 下载Word收据
     st.download_button(
-        label="下载收据",
+        label="下载Word格式收据",
         data=output_buffer,
         file_name=safe_filename,
         mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document",
