@@ -14,7 +14,6 @@ import re
 import streamlit as st
 import sqlite3
 import pandas as pd
-from streamlit_gsheets import GSheetsConnection
 import time
 
 
