@@ -128,6 +128,8 @@ def receipt_preview_page(output_doc, receipt_filename):
     output_doc.save(output_buffer)
     output_buffer.seek(0)
 
+    st.divider()
+
     # 下载Word收据
     st.download_button(
         label="下载收据",
