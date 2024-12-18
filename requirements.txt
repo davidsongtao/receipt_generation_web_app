@@ -9,7 +9,6 @@ st-copy-to-clipboard==0.1.6
 cobble==0.1.4
 mammoth==1.8.0
 pandas==2.2.3
-mysqlclient==2.2.6
 SQLAlchemy == 2.0.36
 
 
