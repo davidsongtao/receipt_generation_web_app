@@ -250,17 +250,17 @@ def price_page():
 
 
 def main():
-    st.set_page_config(page_title='ATM Assistant', page_icon='🤖')
+    st.set_page_config(page_title='ATM Assistant', page_icon='🤖', layout='wide', initial_sidebar_state="auto")
     st.sidebar.title("🏠ATM Cleaning Assistant")
     st.sidebar.divider()
 
-    work_tracking = st.sidebar.button('📊工单追踪', use_container_width=True, type='primary')
+    work_tracking = st.sidebar.button('📊工单追踪', use_container_width=True, type='primary', key='work_tracking')
 
-    receipt_button = st.sidebar.button('🧾创建收据', use_container_width=True, type='primary')
+    receipt_button = st.sidebar.button('🧾创建收据', use_container_width=True, type='primary', key='receipt')
 
-    writing_button = st.sidebar.button('🤖撰写文案', use_container_width=True, type='primary')
+    writing_button = st.sidebar.button('🤖撰写文案', use_container_width=True, type='primary', key='writing')
 
-    price_button = st.sidebar.button('💰自动报价', use_container_width=True, type='primary')
+    price_button = st.sidebar.button('💰自动报价', use_container_width=True, type='primary', key='price')
 
     st.sidebar.divider()
     st.sidebar.title("👤Personal Assistant")
@@ -271,7 +271,7 @@ def main():
 
     # 使用按钮状态控制页面展示
     if 'current_page' not in st.session_state:
-        st.session_state.current_page = '收据生成'
+        st.session_state.current_page = '工单追踪'
 
     # 根据按钮点击更新页面
     if receipt_button:
@@ -305,7 +305,6 @@ def main():
 
     elif st.session_state.current_page == '文案撰写':
         writing_page()
-
     elif st.session_state.current_page == '课程总结':
         quotation_page()
     elif st.session_state.current_page == '报价生成':

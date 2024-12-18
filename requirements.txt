@@ -9,7 +9,7 @@ st-copy-to-clipboard==0.1.6
 cobble==0.1.4
 mammoth==1.8.0
 pandas==2.2.3
-gcsfs
-st-files-connection
-sqlalchemy==2.0.36
-st-gsheets-connection
+mysqlclient==2.2.6
+SQLAlchemy
+
+

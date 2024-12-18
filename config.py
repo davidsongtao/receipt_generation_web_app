@@ -40,10 +40,12 @@ CUSTOM_HEADER = {
     'project': '项目',
     'dispatcher': '派单阿姨',
     'confirmed': '已确认',
-    'registered': '登记',
-    'dispatched': '派单',
+    'registered': '已登记',
+    'dispatched': '已派单',
     'dispatch_price': '派遣价格',
     'final_price': '成交价',
     'receipt_or_invoice': '收据/发票',
-    'sent_or_not': '已发送'
+    'sent_or_not': '已发送',
+    'id': '订单编号',
+    'sales_price': '派单价'
 }

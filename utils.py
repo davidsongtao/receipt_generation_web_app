@@ -16,6 +16,7 @@ import sqlite3
 import pandas as pd
 import time
 
+from sqlalchemy import text
 
 
 def format_date(input_date):
@@ -105,93 +106,125 @@ def validate_address(address):
     return True, ""
 
 
-# def connect_db():
-#     conn = st.connection('gsheets', type=GSheetsConnection)
-#     df = conn.read(spreadsheet='work_orders', worksheet="Sheet1", usecols=[0, 1], nrows=3,)
-#     return df
-
 def connect_db():
-    conn = sqlite3.connect(r"./work_orders.db")
-    return conn
-
-
-def insert_data_to_db(register_time, notes, work_time, address, project, dispatcher, confirmed, registered, dispatched, dispatch_price, final_price, receipt_or_invoice, sent_or_not):
-    print("正在插入数据...")
-
-    conn = connect_db()
-    if not conn:
-        st.error("数据库连接失败！")
-        return
-
-    cursor = conn.cursor()
     try:
-        # 打印所有参数，检查是否有异常值
-        print("参数列表：",
-              register_time, notes, work_time, address, project,
-              dispatcher, confirmed, registered, dispatched,
-              dispatch_price, final_price, receipt_or_invoice, sent_or_not
-              )
-
-        cursor.execute(
-            """
-            INSERT INTO work_orders (
-                register_time, notes, work_time, address, project, 
-                dispatcher, confirmed, registered, dispatched, 
-                dispatch_price, final_price, receipt_or_invoice, sent_or_not
-            )
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-            """,
-            (
-                register_time, notes, work_time, address, project,
-                dispatcher, confirmed, registered, dispatched,
-                dispatch_price, final_price, receipt_or_invoice, sent_or_not
-            )
-        )
-        conn.commit()
-        st.success("工单创建成功！", icon="✅")
+        conn = st.connection('mysql', type='sql')
+        print(f"数据库连接成功！")
+        return conn
     except Exception as e:
-        conn.rollback()
-        st.error(f"添加失败，错误原因：{e}")
-        print(f"详细错误信息：{traceback.format_exc()}")
-    finally:
-        cursor.close()
-        conn.close()
+        print(f"数据库连接失败，错误信息：{e}")
+        return None
+
+
+# def connect_db():
+#     conn = sqlite3.connect(r"./work_orders.db")
+#     return conn
+
+
+def insert_data_to_db(register_time, notes, work_time, address, project, dispatcher, confirmed, registered, dispatched, dispatch_price, final_price, receipt_or_invoice):
+    conn = connect_db()
+    with conn.session as s:
+        try:
+            insert_query = text(
+                """
+                INSERT INTO work_orders (
+                    record_time, notes, work_time, address, basic_plan, 
+                    dispatcher, confirmed, registered, dispatched, 
+                    sales_price, final_price, receipt
+                )
+                VALUES (:record_time, :notes, :work_time, :address, :basic_plan, :dispatcher, :confirmed, :registered, :dispatched, :sales_price, :final_price, :receipt)       
+                """
+            )
+
+            params = {
+                "record_time": register_time,
+                "notes": notes,
+                "work_time": work_time,
+                "address": address,
+                "basic_plan": project,
+                "dispatcher": dispatcher,
+                "confirmed": confirmed,
+                "registered": registered,
+                "dispatched": dispatched,
+                "sales_price": dispatch_price,
+                "final_price": final_price,
+                "receipt": receipt_or_invoice
+            }
+            s.execute(insert_query, params)
+            s.commit()
+            success = st.success("工单创建成功！页面将在3秒后刷新...", icon="✅")
+            time.sleep(1)
+            success.empty()
+            success = st.success("工单创建成功！页面将在2秒后刷新...", icon="✅")
+            time.sleep(1)
+            success.empty()
+            success = st.success("工单创建成功！页面将在1秒后刷新...", icon="✅")
+            time.sleep(1)
+            st.cache_data.clear()
+            st.rerun()
+        except Exception as e:
+            st.error(f"添加失败，错误原因：{e}")
+
 
 
 # 显示工单数据
 def display_all_orders():
     conn = connect_db()
-    df = pd.read_sql("SELECT * FROM work_orders", conn)
-    conn.close()
-
-    st.dataframe(df, hide_index=True)
+    df = conn.query("SELECT * FROM work_orders", ttl=600)
+    st.dataframe(df, hide_index=False)
 
 
 def display_preview_data():
     conn = connect_db()
-    df = pd.read_sql("SELECT * FROM work_orders", conn)
-    df = df[['address', 'work_time', 'dispatcher', 'notes', 'final_price', 'dispatched', 'registered']]
+    df = conn.query("SELECT * FROM work_orders", ttl=600)
+    df = df[['work_time', 'dispatcher', 'address', 'final_price', 'sales_price', 'notes']]
     from config import CUSTOM_HEADER
     df = df.rename(columns=CUSTOM_HEADER)
     st.dataframe(df, hide_index=True)
-    conn.close()
 
 
-def edit_work_order_page(register_time, notes, work_time, address, project, dispatcher, confirmed, registered, dispatched, dispatch_price, final_price, receipt_or_invoice, sent_or_not):
+def edit_work_order_page(record_time, notes, work_time, address, basic_plan, dispatcher, confirmed, registered, dispatched, sales_price, final_price, receipt):
     conn = connect_db()
-    try:
-        update_query = """
-            UPDATE work_orders
-            SET register_time = ?, notes = ?, work_time = ?, address = ?, project = ?, dispatcher = ?, confirmed = ?, registered = ?, dispatched = ?, dispatch_price = ?, final_price = ?, receipt_or_invoice = ?, sent_or_not = ?
-            WHERE address = ?
-        """
-        conn.execute(update_query, (register_time, notes, work_time, address, project, dispatcher, confirmed, registered, dispatched, dispatch_price, final_price, receipt_or_invoice, sent_or_not, address))
-        conn.commit()
-        conn.close()
-        st.rerun()
-        st.success("工单更新成功！", icon="✅")
-    except Exception as e:
-        st.error(f"更新失败，错误原因：{e}")
+    with conn.session as s:
+        try:
+            update_query = text(
+                "UPDATE work_orders SET record_time = :record_time , notes = :notes, work_time = :work_time, address = :address, basic_plan = :basic_plan, dispatcher = :dispatcher, confirmed = :confirmed, registered = :registered, dispatched = :dispatched, sales_price = :sales_price, final_price = :final_price, receipt = :receipt WHERE address = :address")
+            param = {
+                "record_time": record_time,
+                "notes": notes,
+                "work_time": work_time,
+                "address": address,
+                "basic_plan": basic_plan,
+                "dispatcher": dispatcher,
+                "confirmed": confirmed,
+                "registered": registered,
+                "dispatched": dispatched,
+                "sales_price": sales_price,
+                "final_price": final_price,
+                "receipt": receipt,
+            }
+            s.execute(update_query, params=param)
+            s.commit()
+            success = st.success("工单更新成功！页面将在3秒后刷新...", icon="✅")
+            time.sleep(1)
+            success.empty()
+            success = st.success("工单更新成功！页面将在2秒后刷新...", icon="✅")
+            time.sleep(1)
+            success.empty()
+            success = st.success("工单更新成功！页面将在1秒后刷新...", icon="✅")
+            time.sleep(1)
+            st.cache_data.clear()
+            st.rerun()
+        except Exception as e:
+            st.error(f"更新失败，错误原因：{e}")
+
+
+def format_work_orders(data):
+    formatted_orders = []
+    for i in range(len(data['id'])):
+        formatted_order = f"{data['work_time'][i]} | {data['dispatcher'][i]} | {data['address'][i]}"
+        formatted_orders.append(formatted_order)
+    return formatted_orders
 
 
 def get_all_addresses():
@@ -199,38 +232,39 @@ def get_all_addresses():
     # 示例：查询数据库返回所有地址
 
     conn = connect_db()  # 请替换成你的数据库文件路径
-    cursor = conn.cursor()
-    cursor.execute("SELECT DISTINCT address FROM work_orders")
-    addresses = cursor.fetchall()
-    conn.close()
-
-    return [address[0] for address in addresses]
+    addresses = conn.query("SELECT id, work_time, dispatcher, address  FROM work_orders", ttl=600)
+    order_info = format_work_orders(addresses.to_dict())
+    return order_info
 
 
-def get_order_by_address(address):
+def get_order_by_address(order_info):
+    address = order_info.split(" | ")[2]
     conn = connect_db()  # 请替换成你的数据库文件路径
-    cursor = conn.cursor()
-    cursor.execute("SELECT * FROM work_orders WHERE address = ?", (address,))
-    orders = cursor.fetchall()
-    conn.close()
+    result = conn.query("SELECT * FROM work_orders WHERE address = :address", params={'address': address}, ttl=360)
 
-    return orders
+    return result.to_dict()
 
 
 def delete_work_order(address):
     conn = connect_db()
-    try:
-        delete_query = """
-        DELETE FROM work_orders WHERE address = ?
-        """
-        cursor = conn.cursor()
-        cursor.execute(delete_query, (address,))
-        conn.commit()
+    with conn.session as s:
+        try:
+            delete_query = text("DELETE FROM work_orders WHERE address = :address")
 
-        conn.close()
-        st.success("工单删除成功！", icon="✅")
-    except Exception as e:
-        st.warning("失败")
+            s.execute(delete_query, params={'address': address})
+            s.commit()
+            success = st.success("工单删除成功！页面将在3秒后刷新...", icon="✅")
+            time.sleep(1)
+            success.empty()
+            success = st.success("工单删除成功！页面将在2秒后刷新...", icon="✅")
+            time.sleep(1)
+            success.empty()
+            success = st.success("工单删除成功！页面将在1秒后刷新...", icon="✅")
+            time.sleep(1)
+            st.cache_data.clear()
+            st.rerun()
+        except Exception as e:
+            st.warning(f"失败, 错误信息：{e}")
 
 
 def get_total_sale():
@@ -239,16 +273,9 @@ def get_total_sale():
         query_query = """
         SELECT SUM(final_price) AS total_final_price FROM work_orders 
         """
-        cursor = conn.cursor()
-        cursor.execute(query_query)
-
-        result = cursor.fetchone()
-
-        total_final_price = result[0] if result[0] is not None else 0
-
-        return total_final_price
+        result = conn.query(query_query, ttl=600)
+        result = result['total_final_price'][0]
+        return result
     except Exception as e:
         st.error(f"查询失败，错误原因：{e}")
         return None
-    finally:
-        conn.close()
