@@ -79,7 +79,7 @@ def work_tracking_page():
                     col1, col2, col3 = st.columns([2, 2, 2])
                     with col1:
                         register_time = st.date_input('登记时间', value=order['record_time'][0])
-                        work_time = st.date_input('工作时间', value=order['record_time'][0])
+                        work_time = st.date_input('工作时间', value=order['work_time'][0])
                         if order['receipt'][0] == '0':
                             index_paper = 0
                         elif order['receipt'][0] == '1':
