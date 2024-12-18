@@ -176,7 +176,7 @@ def display_all_orders():
 def display_preview_data():
     conn = connect_db()
     df = conn.query("SELECT * FROM work_orders", ttl=600)
-    df = df[['work_time', 'dispatcher', 'address', 'final_price', 'sales_price', 'notes']]
+    df = df[['work_time', 'dispatcher', 'address', 'final_price', 'notes']]
     from config import CUSTOM_HEADER
     df = df.rename(columns=CUSTOM_HEADER)
     st.dataframe(df, hide_index=True, use_container_width=True, on_select="ignore", selection_mode="single-row")
