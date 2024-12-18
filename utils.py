@@ -166,7 +166,6 @@ def insert_data_to_db(register_time, notes, work_time, address, project, dispatc
             st.error(f"添加失败，错误原因：{e}")
 
 
-
 # 显示工单数据
 def display_all_orders():
     conn = connect_db()
@@ -180,7 +179,7 @@ def display_preview_data():
     df = df[['work_time', 'dispatcher', 'address', 'final_price', 'sales_price', 'notes']]
     from config import CUSTOM_HEADER
     df = df.rename(columns=CUSTOM_HEADER)
-    st.dataframe(df, hide_index=True, use_container_width=True, selection_mode="single-row")
+    st.dataframe(df, hide_index=True, use_container_width=True, on_select="ignore", selection_mode="single-row")
 
 
 def edit_work_order_page(record_time, notes, work_time, address, basic_plan, dispatcher, confirmed, registered, dispatched, sales_price, final_price, receipt):
