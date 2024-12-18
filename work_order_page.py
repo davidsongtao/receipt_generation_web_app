@@ -21,14 +21,14 @@ def work_tracking_page():
     total_sale = get_total_sale()
     col1, col2 = st.columns([1, 1])
     with col1:
-        st.write(f"当前工单数金额: ", )
+        st.write(f"当前总成交额: ", )
         if total_sale == None:
             total_sale_value = 0
         else:
             total_sale_value = total_sale
         st.subheader(f"$ {total_sale_value}")
     with col2:
-        st.write(f"当前佣金: ", )
+        st.write(f"已赚取佣金: ", )
         if total_sale == None:
             total_commission = 0
         else:
