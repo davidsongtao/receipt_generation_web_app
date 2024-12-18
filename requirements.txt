@@ -9,7 +9,7 @@ st-copy-to-clipboard==0.1.6
 cobble==0.1.4
 mammoth==1.8.0
 pandas==2.2.3
-mysqlclient
 SQLAlchemy == 2.0.36
+mysql-connector-python==9.1.0
 
 
