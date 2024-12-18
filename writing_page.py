@@ -39,7 +39,9 @@ def writing_page():
     generate_button = st.button('生成文案', use_container_width=True, type='primary')
 
     # 生成文案
-    if generate_button:
+    if generate_button and not user_requirement:
+        st.error("请输入文案需求！")
+    elif generate_button and user_requirement:
         # 显示加载中
         with st.spinner('正在生成文案...'):
             try:
