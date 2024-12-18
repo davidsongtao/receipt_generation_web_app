@@ -180,7 +180,7 @@ def display_preview_data():
     df = df[['work_time', 'dispatcher', 'address', 'final_price', 'sales_price', 'notes']]
     from config import CUSTOM_HEADER
     df = df.rename(columns=CUSTOM_HEADER)
-    st.dataframe(df, hide_index=True)
+    st.dataframe(df, hide_index=True, use_container_width=True, selection_mode="single-row")
 
 
 def edit_work_order_page(record_time, notes, work_time, address, basic_plan, dispatcher, confirmed, registered, dispatched, sales_price, final_price, receipt):

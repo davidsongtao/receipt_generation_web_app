@@ -166,12 +166,12 @@ def work_tracking_page():
             submitted = st.form_submit_button('提交工单信息', disabled=False, type='primary', use_container_width=True)
             if submitted:
                 try:
-                    if work_time == None:
+                    if address == "":
+                        st.error("您必须填写地址！", icon="⚠️")
+                    elif work_time == None:
                         st.error("您必须填写工作时间！", icon="⚠️")
                     elif dispatcher == None:
                         st.error("您必须填写派单阿姨！", icon="⚠️")
-                    elif address == "":
-                        st.error("您必须填写地址！", icon="⚠️")
                     else:
                         from utils import insert_data_to_db
                         confirmed_value = 0 if confirmed == '✅' else 1
