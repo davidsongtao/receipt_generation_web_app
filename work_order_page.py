@@ -39,7 +39,7 @@ def work_tracking_page():
     with st.expander("🔍工单预览", expanded=True):
         from utils import display_preview_data
         display_preview_data()
-    extender_detail = st.expander("📝工单详情", expanded=False)
+    extender_detail = st.expander("📝工单详情")
     with extender_detail:
         from utils import get_all_addresses
         order_info = st.selectbox('请选择您要查看的工单：', options=get_all_addresses(), placeholder="请选择...", index=None)
